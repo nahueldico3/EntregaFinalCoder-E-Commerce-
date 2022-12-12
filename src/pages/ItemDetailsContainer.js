@@ -1,20 +1,29 @@
-import data from '../assets/data';
-import {Link} from 'react-router-dom';
-import ButtonCount from '../components/ButtonCount'
+import {useState, useEffect} from 'react';
+import {useParams} from 'react-router-dom'
+import { consultarBDD } from '../app/funciones';
+import ItemDetail from './ItemDetail';
 
-// DETALLE DEL PRODUCTO - PRECIO - AGREGAR Y QUITAR DEL CARRITO - BOTON DE VOLVER
+const ItemDetailContainer = () => {
 
-const ItemDetailsContainer = () => {
+    const [producto, setProducto] = useState([]);
+    const {id} = useParams()
+
+    useEffect(() => {
+        consultarBDD('../JSON/productos.json').then(productos =>{
+            const prod = productos.find(productoArray => productoArray.id === parseInt(id))
+        
+            setProducto(prod)
+
+        }
+        )
+    })
+
     return (
         <div>
-            <div>
-                <h3>Milanesa de Soja</h3>
-                <img src = {data[5].foto} alt="milanesasdesoja" width={180}/>
-                <b>$320</b>
-                <ButtonCount/>
-            </div>
+            <div className='card mb-4 container ItemDetail'></div>
+            <ItemDetail producto={producto} />
         </div>
-    )
+    );
 }
 
-export default ItemDetailsContainer;
+export default ItemDetailContainer;
